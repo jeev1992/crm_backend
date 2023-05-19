@@ -55,7 +55,7 @@ async function init(){
 
 //Import the routes
 require('./routes/auth.routes')(app)
-
+require('./routes/user.routes')(app)
 
 //App(Server) to listen for HTTP requests at port 8080
 app.listen(serverConfig.PORT, () => {
