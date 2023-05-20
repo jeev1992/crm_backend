@@ -30,6 +30,26 @@ exports.findById = async (req, res) => {
     }
 }
 
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
+    const userIdReq = req.params.userId
 
+    try{
+        const user = await User.findOneAndUpdate({
+            userId: userIdReq
+        }, {
+            userName: req.body.userName,
+            userStatus: req.body.userStatus ,
+            userType: req.body.userType
+        }).exec();
+
+        if(user){
+            return res.status(200).send({
+                message: "User updated successfully"
+            })
+        }
+    }catch(err){
+        res.status(500).send({
+            message: "Some internal server error occured"
+        })
+    }
 }

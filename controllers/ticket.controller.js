@@ -32,14 +32,39 @@ exports.createTicket = async (req, res) => {
             await user.save()
 
             //Update the engineer
+            if(engineer){
+                engineer.ticketsAssigned.push(ticket._id)
+                await engineer.save()
+            }
+
+            return res.status(200).send(ticket)
         }
     }catch(err){
-
+        return res.status(500).send({
+            message: "Some internal server error occured"
+        })
     }
 }
 
-exports.updateTicket = (req, res) => {
+exports.updateTicket = async (req, res) => {
+    //Only one who has created the ticket can update the ticket
+    const ticket = await Ticket.findOne({_id: req.params.id})
 
+    if(ticket && ticket.reporter == req.userId){
+        //Allowed to update
+        ticket.title = req.body.title != undefined ? req.body.title : ticket.title,
+        ticket.description = req.body.description != undefined ? req.body.description: ticket.description,
+        ticket.ticketPriority = req.body.ticketPriority != undefined ? req.body.ticketPriority : ticket.ticketPriority,
+        ticket.status = req.body.status != undefined ? req.body.status : ticket.status
+
+        var updatedTicket = await ticket.save()
+
+        return res.status(200).send(updatedTicket)
+    }else{
+        res.status(401).send({
+            message: "Ticket can only be updated by the customer who created it"
+        })
+    }
 }
 
 exports.getAllTickets = (req, res) => {
