@@ -1,0 +1,187 @@
+{
+	"info": {
+		"_postman_id": "84d7aafb-ed2b-49ba-b48d-f34ec977aed1",
+		"name": "CRM_Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "SignUp",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": \"engineer_001\",\r\n    \"password\":\"Engineer@100\",\r\n    \"name\": \"Engineer 001\",\r\n    \"email\": \"engineer_001@gmail.com\",\r\n    \"userType\": \"ENGINEER\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/crm/api/v1/auth/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"crm",
+						"api",
+						"v1",
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SignIn",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": \"customer_001\",\r\n    \"password\": \"Customer@100\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/crm/api/v1/auth/signin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"crm",
+						"api",
+						"v1",
+						"auth",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update a user",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFkbWluIiwiaWF0IjoxNjg0NTY1MjA0LCJleHAiOjE2ODQ2NTE2MDR9.Js3HNQ0M4gOpqPFVJDSfkgLqep_0cL7Yxxy9DmObUH4",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userType\": \"ENGINEER\",\r\n    \"userStatus\": \"APPROVED\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/crm/api/v1/users/engineer_001",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"crm",
+						"api",
+						"v1",
+						"users",
+						"engineer_001"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a ticket",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImN1c3RvbWVyXzAwMSIsImlhdCI6MTY4NDU2NTU4NywiZXhwIjoxNjg0NjUxOTg3fQ.NxfL4UMmBn0D6l1DpJM3bRwdFCp_fVZfUD_z9gF3_HU",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Login button not working\",\r\n    \"description\": \"Login button not working since yesterday. It was green before now it is black.\",\r\n    \"ticketPriority\": 3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/crm/api/v1/tickets/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"crm",
+						"api",
+						"v1",
+						"tickets",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update a ticket",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImN1c3RvbWVyXzAwMSIsImlhdCI6MTY4NDU2NjYzNywiZXhwIjoxNjg0NjUzMDM3fQ.WQ9U4UNyEAn2xGud9nHuFuOfaTtFnsJL5lVOR5dogKs",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\": \"CLOSED\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/crm/api/v1/tickets/64686ed6887486a1b8f60a7b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"crm",
+						"api",
+						"v1",
+						"tickets",
+						"64686ed6887486a1b8f60a7b"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
