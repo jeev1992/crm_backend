@@ -67,10 +67,33 @@ exports.updateTicket = async (req, res) => {
     }
 }
 
-exports.getAllTickets = (req, res) => {
+exports.getAllTickets = async (req, res) => {
+    const queryObject = {
+        reporter: req.userId
+    }
 
+    if(req.query.status != undefined){
+        queryObject.status = req.query.status
+    }
+
+    if(req.query.ticketPriority != undefined){
+        queryObject.ticketPriority = req.query.ticketPriority
+    }
+
+    const tickets = await Ticket.find(queryObject);
+
+    if(tickets){
+        return res.status(200).send(tickets)
+    }
 }
 
-exports.getOneTicket = (req, res) => {
+exports.getOneTicket = async (req, res) => {
+    const ticket = await Ticket.findOne({
+        _id: req.params.id,
+        reporter: req.userId
+    })
 
+    if(ticket){
+        return res.status(200).send(ticket)
+    }
 }
