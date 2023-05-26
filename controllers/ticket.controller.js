@@ -1,6 +1,7 @@
 const User = require("../models/user.model")
 const Ticket = require("../models/ticket.model")
 const constants = require("../utils/constants")
+const sendEmail = require('../utils/NotificationClient')
 
 exports.createTicket = async (req, res) => {
     const ticketObject = {
@@ -36,6 +37,9 @@ exports.createTicket = async (req, res) => {
                 engineer.ticketsAssigned.push(ticket._id)
                 await engineer.save()
             }
+
+            //Send email notification
+            sendEmail(ticket._id, `Ticket with ticketId ${ticket._id} updated and is in status ${ticket.status}`, ticket.description, [user.email, engineer.email], ticket.reporter)
 
             return res.status(200).send(ticket)
         }
