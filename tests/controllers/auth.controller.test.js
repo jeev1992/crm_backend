@@ -2,6 +2,7 @@ const db = require('../db')
 const {mockRequest, mockResponse} = require('../interceptor')
 const User = require('../../models/user.model')
 const {signin, signup} = require('../../controllers/auth.controller')
+const bcrypt = require('bcryptjs')
 
 beforeAll(async () => await db.connect())
 afterEach(async () => await db.clearDatabase())
@@ -40,7 +41,7 @@ describe("SignUp", () => {
     })
 
     it('Should return error while user creation', async () => {
-        const spy = jest.spyOn(User, 'create').mockImplementation(cb => cb(new Error("Error occured while create"), null))
+        const spy = jest.spyOn(User, 'create').mockImplementation(() => {throw new Error("Error")})
         const req = mockRequest()
         const res = mockResponse()
 
@@ -49,6 +50,7 @@ describe("SignUp", () => {
 
         await signup(req, res)
 
+        expect(spy).toHaveBeenCalled()
         expect(res.status).toHaveBeenCalledWith(500)
         expect(res.send).toHaveBeenCalledWith({
             message: "Some internal error occured while creating the user"
@@ -60,12 +62,38 @@ describe("SignUp", () => {
 
 describe("SignIn", () => {
 
-    it('Should fail due to password mismatch', () => {
+    it('Should fail due to password mismatch', async () => {
+        testPayload.userStatus = "APPROVED"
+        const userSpy = jest.spyOn(User, 'findOne').mockReturnValue(Promise.resolve(testPayload))
+        const bcryptSpy = jest.spyOn(bcrypt, 'compareSync').mockReturnValue(false)
+        const req = mockRequest();
+        const res = mockResponse()
+        req.body = testPayload
 
+        await signin(req, res)
+
+        expect(userSpy).toHaveBeenCalled()
+        expect(bcryptSpy).toHaveBeenCalled()
+        expect(res.status).toHaveBeenCalledWith(401)
+        expect(res.send).toHaveBeenCalledWith({
+            message: "Password provided is invalid"
+        })
     })
 
-    it('Should fail as userStatus is PENDING', () => {
+    it('Should fail as userStatus is PENDING', async () => {
+        testPayload.userStatus = "PENDING"
+        const userSpy = jest.spyOn(User, 'findOne').mockReturnValue(Promise.resolve(testPayload))
+        const req = mockRequest()
+        const res = mockResponse()
+        req.body = testPayload
 
+        await signin(req, res)
+
+        expect(userSpy).toHaveBeenCalled()
+        expect(res.status).toHaveBeenCalledWith(403)
+        expect(res.send).toHaveBeenCalledWith({
+            message: "Can't allow user to login as the status is " + testPayload.userStatus
+        })
     })
 
     it('Should fail as userId doesnt exist already', () => {
@@ -76,3 +104,18 @@ describe("SignIn", () => {
 
     })
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
