@@ -3,6 +3,7 @@ const {mockRequest, mockResponse} = require('../interceptor')
 const User = require('../../models/user.model')
 const {signin, signup} = require('../../controllers/auth.controller')
 const bcrypt = require('bcryptjs')
+const jwt = require("jsonwebtoken")
 
 beforeAll(async () => await db.connect())
 afterEach(async () => await db.clearDatabase())
@@ -96,12 +97,46 @@ describe("SignIn", () => {
         })
     })
 
-    it('Should fail as userId doesnt exist already', () => {
+    it('Should fail as userId doesnt exist already', async () => {
+        const userSpy = jest.spyOn(User, 'findOne').mockReturnValue(null)
+        const req = mockRequest()
+        const res = mockResponse()
+        req.body = testPayload
 
+        await signin(req, res)
+
+        expect(userSpy).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.send).toHaveBeenCalledWith({
+            message: "Failed! UserId doesn't exist"
+        })
     })
 
-    it('Should pass and signIn the user', () => {
+    it('Should pass and signIn the user', async () => {
+        testPayload.userStatus = "APPROVED"
+        const userSpy = jest.spyOn(User, 'findOne').mockReturnValue(Promise.resolve(testPayload))
+        const bcryptSpy = jest.spyOn(bcrypt, 'compareSync').mockReturnValue(true)
+        const jwtSpy = jest.spyOn(jwt, 'sign').mockReturnValue("123")
+        const req = mockRequest()
+        const res = mockResponse()
+        req.body = testPayload
 
+        await signin(req, res)
+
+        expect(jwtSpy).toHaveBeenCalled()
+        expect(userSpy).toHaveBeenCalled()
+        expect(bcryptSpy).toHaveBeenCalled()
+        expect(res.status).toHaveBeenCalledWith(200)
+        expect(res.send).toHaveBeenCalledWith(
+            expect.objectContaining({
+                accessToken: "123",
+                email: testPayload.email,
+                name: testPayload.name,
+                userId: testPayload.userId,
+                userTypes: testPayload.userType,
+                userStatus: testPayload.userStatus
+            })
+        )
     })
 })
 
