@@ -16,7 +16,7 @@ module.exports = (ticketId, subject, content, emailIds, requester) => {
         headers: {"Content-Type": "application/json"}
     }
 
-    client.post("http://localhost:7777/notificationService/api/v1/notification", args, function (data, response){
+    client.post("https://notification-service-zyxe.onrender.com/notificationService/api/v1/notification", args, function (data, response){
         console.log(data)
     })
 }
