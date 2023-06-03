@@ -10,7 +10,8 @@ const userTestPayload = {
     userStatus: "APPROVED",
     email: "test@gmail.com",
     ticketsCreated: [],
-    ticketsAssigned: []
+    ticketsAssigned: [],
+    save: jest.fn().mockReturnValue(userTestPayload),
 }
 
 describe("FindAll", () => {
@@ -45,7 +46,7 @@ describe("FindAll", () => {
 
         expect(userSpy).toHaveBeenCalled()
         expect(res.status).toHaveBeenCalledWith(500)
-        
+
     })
 })
 
@@ -62,7 +63,9 @@ describe("FindById", () => {
 
 describe("Update", () => {
     it("Should pass and return the updated user", () => {
-
+        const userSpy = jest.spyOn(User, 'findOneAndUpdate').mockImplementation(() => ({
+            exec: jest.fn().mockReturnValue(userTestPayload)
+        }))
     })
 
     it("Should fail", () => {
