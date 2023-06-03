@@ -19,6 +19,7 @@ verifyToken = (req, res, next) => {
             })
         }
 
+        console.log("Decoded Id is " + decoded.id)
         req.userId = decoded.id
 
         next();
