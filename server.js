@@ -9,7 +9,7 @@ const User = require('./models/user.model')
 const bcrypt = require('bcryptjs')
 require("dotenv").config()
 var cors = require('cors');
-app.use(cors());
+
 
 //Express settings
 const bodyParser = require('body-parser')
@@ -17,6 +17,7 @@ const express = require('express')
 const app = express()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
+app.use(cors());
 
 //Establish DB connection
 mongoose.connect(dbConfig.DB_URL)
