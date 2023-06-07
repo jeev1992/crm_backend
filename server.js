@@ -8,6 +8,8 @@ const serverConfig = require('./configs/server.config')
 const User = require('./models/user.model')
 const bcrypt = require('bcryptjs')
 require("dotenv").config()
+var cors = require('cors');
+app.use(cors());
 
 //Express settings
 const bodyParser = require('body-parser')
